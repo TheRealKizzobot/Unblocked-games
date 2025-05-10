@@ -1,0 +1,16 @@
+{
+  "name": "unblocked-games",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@cloudflare/kv-asset-handler": "^0.2.0",
+    "wrangler": "^4.14.1"
+  },
+  "private": true,
+  "scripts": {
+    "start": "wrangler dev",
+    "publish": "wrangler publish"
+  },
+  "dependencies": {
+    "firebase": "^11.6.1"
+  }
+}

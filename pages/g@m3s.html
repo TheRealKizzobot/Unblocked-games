@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/scripts/scripts.js"></script>
+    <script src="https://kit.fontawesome.com/30dbb05315.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/fontawsome.css">
+    <title>DK Proxies</title>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fade-out">
+        <div id="loading-spinner"></div>
+        <h1>Loading...</h1>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <span>DK Proxies</span>
+            <a class="btn" href="/index.html"><i class="fa-solid fa-home"></i></a>
+        </div>
+        <div class="icons">
+            <a class="btn" href="/pages/g@m3s.html"><i class="fa-solid fa-gamepad"></i></a>
+            <a class="btn" href="/pages/4pp$.html"><i class="fa-solid fa-border-all"></i></a>
+            <a class="btn" href="/pages/m0v1e$.html"><i class="fa-solid fa-film"></i></a>
+            <a class="btn" href="/pages/settings.html"><i class="fa-solid fa-gear"></i></a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <h1>Games</h1>
+        <section id="features" class="game-holder">
+            <a class="game-card" data-title="Cluster Rush" href="#" data-url="/pages/gAme$/cluster-truck.html"><img class="game-image" src="/assets/cluster-truck.jpg"></a>
+            <a class="game-card" data-title="aCluster Rush" href="#" data-url="google.com"><img class="game-image" src="/assets/cluster-truck.jpg"></a>
+            <a class="game-card" data-title="Tetris" href="#" data-url="/pages/gAme$/tetris.html"><img class="game-image" src="/assets/tetris.jpg"></a>
+            <a class="game-card" data-title="Idle Breakout" href="#" data-url="/pages/gAme$/idle-breakout.html"><img class="game-image" src="/assets/idle-breakout.jpg"></a>
+            <a class="game-card" data-title="Cookie Clicker" href="#" data-url="/pages/gAme$/cookie-clicker.html"><img class="game-image" src="/assets/cookie-clicker.jpg"></a>
+            <a class="game-card" data-title="Angry Birds" href="#" data-url="/pages/gAme$/angry-birds.html"><img class="game-image" src="/assets/angry-birds.jpg"></a>
+            <a class="game-card" data-title="Tunnel Rush" href="#" data-url="/pages/gAme$/tunnel-rush.html"><img class="game-image" src="/assets/tunnel-rush.jpg"></a>
+            <a class="game-card" data-title="Slope" href="#" data-url="/pages/gAme$/slope.html"><img class="game-image" src="/assets/slope.jpg"></a>
+            <a class="game-card" data-title="Y8" href="#" data-url="/pages/gAme$/y8-games.html"><img class="game-image" src="/assets/y8.jpg"></a>        </section>
+    </main>
+    <style>
+    .game-card {
+    background-color: #00aaff;
+    color: #2e2e2e;
+    border-radius: 5px;
+    text-decoration: none;
+    height: 180px;
+    width: 180px;
+    cursor: pointer;
+    }
+
+    .game-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 5px;
+    height: 1500px;
+    width: 1500px;
+    }
+
+    .game-holder {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    a.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Panic Key Logic
+            const keybind = localStorage.getItem('keybind') || '~'; // Default panic key
+            const sitefortab = localStorage.getItem('sitefortab') || 'https://canvas.instructure.com/login/canvas'; // Default panic site
+            
+            document.body.addEventListener('keydown', function(event) {
+                if (event.key === keybind) {
+                    window.location.href = sitefortab;
+                }
+            });
+
+            // Tab Cloaker Logic
+            const savedFaviconUrl = localStorage.getItem('faviconUrl');
+            const savedTitle = localStorage.getItem('pageTitle');
+
+            if (savedFaviconUrl) {
+                let link = document.querySelector('link[rel="shortcut icon"]');
+                if (!link) {
+                    link = document.createElement('link');
+                    link.rel = 'shortcut icon';
+                    document.head.appendChild(link);
+                }
+                link.href = savedFaviconUrl;
+            }
+
+            if (savedTitle) {
+                document.title = savedTitle;
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gatekeep Mode Logic
+            const gatekeepMode = localStorage.getItem('gatekeepMode') === 'true';
+            const logo = document.querySelector('.logo');
+            const title = document.getElementById('title');
+
+            function updateGatekeepUI() {
+                if (gatekeepMode) {
+                    logo.style.display = 'none';
+                    title.style.display = 'none';
+                } else {
+                    logo.style.display = 'block';
+                    title.style.display = 'block';
+                }
+            }
+
+            updateGatekeepUI();
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const gameHolder = document.querySelector('.game-holder');
+            const gameCards = Array.from(gameHolder.querySelectorAll('.game-card'));
+
+            // Sort game cards alphabetically by their `data-title` attribute
+            gameCards.sort((a, b) => {
+              const titleA = a.getAttribute('data-title').toLowerCase();
+                const titleB = b.getAttribute('data-title').toLowerCase();
+                return titleA.localeCompare(titleB);
+          });
+
+            // Clear the gameHolder and append sorted cards
+            gameHolder.innerHTML = '';
+            gameCards.forEach(card => gameHolder.appendChild(card));
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // For each game card, update the link to embed.html with the base64 encoded URL
+            const gameCards = document.querySelectorAll('.game-card');
+
+            gameCards.forEach(card => {
+                const url = card.getAttribute('data-url');
+                const encodedUrl = btoa(url); // Encode the URL to base64
+                const embedUrl = `/embed.html#${encodedUrl}`; // Append base64 encoded URL to embed.html
+
+                // Update the href to the embed.html with base64 encoded URL
+                card.setAttribute('href', embedUrl);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="https://kit.fontawesome.com/30dbb05315.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/fontawsome.css">
+    <title>Settings</title>
+</head>
+<body>
+   <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <span>DK Proxies</span>
+            <a class="btn" href="/index.html"><i class="fa-solid fa-home"></i></a>
+        </div>
+        <div class="icons">
+            <a class="btn" href="/pages/g@m3s.html"><i class="fa-solid fa-gamepad"></i></a>
+            <a class="btn" href="/pages/4pp$.html"><i class="fa-solid fa-border-all"></i></a>
+            <a class="btn" href="/pages/m0v1e$.html"><i class="fa-solid fa-film"></i></a>
+            <a class="btn" href="/pages/settings.html"><i class="fa-solid fa-gear"></i></a>
+        </div>
+    </div>
+
+    <!-- Settings Content -->
+    <main>
+        <h1 id="title">Settings</h1>
+
+        <!-- Gatekeep Mode -->
+        <section>
+            <h2>Gatekeep Mode</h2>
+            <p>Toggle Gatekeep Mode to hide the navigation bar and page title:</p>
+            <div class="input-group">
+                <button id="gatekeep-button">Toggle Gatekeep Mode</button>
+                <span id="gatekeep-status">Gatekeeping Mode is OFF</span>
+            </div>
+        </section>
+
+        <!-- Panic Site Settings -->
+        <section>
+            <h2>Panic Site</h2>
+            <p>Select the site to redirect to when the panic button is pressed:</p>
+            <div class="input-group">
+                <select id="tabselect">
+                    <option value="https://canvas.instructure.com/login/canvas">Canvas (default)</option>
+                    <option value="https://classroom.google.com">Google Classroom</option>
+                    <option value="https://www.google.com">Google Homepage</option>
+                    <option value="https://www.bing.com">Bing</option>
+                    <option value="https://mail.google.com/">Gmail</option>
+                    <option value="https://www.khanacademy.org">Khan Academy</option>
+                    <option value="https://google.com/page-not-found/404">404 Not Found</option>
+                </select>
+                <button id="confirmtab">Confirm</button>
+            </div>
+        </section>
+
+        <!-- Keybind Settings -->
+        <section>
+            <h2>Panic Button Keybind</h2>
+            <p>Set a key to trigger the panic button. Press the button below to start listening for a key.</p>
+            <div class="input-group">
+                <button id="setkeybind">Set Key</button>
+                <span id="output">Current key: ~</span>
+            </div>
+        </section>
+
+        <!-- Tab Cloak Settings -->
+        <section>
+            <h2>Tab Cloak</h2>
+            <p>Select a preset to disguise this page with a different title and favicon:</p>
+            <div class="input-group">
+                <select id="faviconDropdown">
+                    <option value="" disabled selected>Select Cloak</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Open in about:blank -->
+        <section>
+            <h2>About:Blank Cloak</h2>
+            <p>Open this page in an <code>about:blank</code> iframe for cloaking:</p>
+            <div class="input-group">
+                <button id="abcloak">Open in about:blank</button>
+            </div>
+        </section>
+    </main>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo span {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .navbar .nav-right a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        section {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #output, #gatekeep-status {
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Keybinding
+            const setkeybind = document.getElementById('setkeybind');
+            const output = document.getElementById('output');
+            let keybind = localStorage.getItem('keybind') || '~'; // Default keybinding
+            output.textContent = `Current key: ${keybind}`;
+
+            setkeybind.addEventListener('click', () => {
+                output.textContent = 'Listening...';
+                document.removeEventListener('keydown', keydownHandler);
+                document.addEventListener('keydown', keydownHandler);
+            });
+
+            function keydownHandler(event) {
+                if (event.key.length === 1) { // Ignore special keys
+                    keybind = event.key;
+                    localStorage.setItem('keybind', keybind);
+                    output.textContent = `Selected Key: ${keybind}`;
+                    document.removeEventListener('keydown', keydownHandler);
+                } else {
+                    output.textContent = 'Invalid key. Try again.';
+                }
+            }
+
+            // Panic Site Selection
+            const tabselect = document.getElementById('tabselect');
+            const confirmtab = document.getElementById('confirmtab');
+            const savedIndex = localStorage.getItem('tabselectIndex');
+            const savedSite = localStorage.getItem('sitefortab') || 'https://canvas.instructure.com/login/canvas';
+
+            if (savedIndex !== null) tabselect.selectedIndex = savedIndex;
+
+            confirmtab.addEventListener('click', () => {
+                const selectedValue = tabselect.value;
+                localStorage.setItem('sitefortab', selectedValue);
+                localStorage.setItem('tabselectIndex', tabselect.selectedIndex);
+                alert(`Panic site set to ${selectedValue}`);
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === keybind) {
+                    window.location.href = savedSite;
+                }
+            });
+
+            // Gatekeeping Mode
+            const gatekeepButton = document.getElementById('gatekeep-button');
+            const gatekeepStatus = document.getElementById('gatekeep-status');
+            const logo = document.querySelector('.logo');
+            const title = document.getElementById('title');
+            let gatekeepMode = localStorage.getItem('gatekeepMode') === 'true';
+
+            function updateGatekeepUI() {
+                if (gatekeepMode) {
+                    logo.style.display = 'none';
+                    title.style.display = 'none';
+                    gatekeepStatus.textContent = 'Gatekeep Mode is ON';
+                } else {
+                    logo.style.display = 'block';
+                    title.style.display = 'block';
+                    gatekeepStatus.textContent = 'Gatekeep Mode is OFF';
+                }
+            }
+
+            gatekeepButton.addEventListener('click', () => {
+                gatekeepMode = !gatekeepMode;
+                localStorage.setItem('gatekeepMode', gatekeepMode);
+                updateGatekeepUI();
+            });
+
+            updateGatekeepUI();
+
+            // Tab Cloaking
+            const faviconDropdown = document.getElementById('faviconDropdown');
+            const presets = {
+                'Google Search': { title: 'calculator - Google Search', favicon: 'https://www.google.com/favicon.ico' },
+                'Google Doc': { title: 'Untitled document - Google Docs', favicon: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico' },
+                'Google Slides': { title: 'Untitled Presentation - Google Slides', favicon: 'https://ssl.gstatic.com/docs/presentations/images/favicon-2023q4.ico' },
+                'Powerpoint': { title: 'Presentation.pptx - Microsoft PowerPoint Online', favicon: 'https://res-1.cdn.office.net/officeonline/pods/s/h25FD28BFF140E152_resources/1033/FavIcon_Ppt.ico' },
+                'Word Document': { title: 'Document.docx - Microsoft Word Online', favicon: 'https://res-1.cdn.office.net/officeonline/wv/s/h4FBD8CC4075E1795_resources/1033/FavIcon_Word.ico' },
+                'Google': { title: 'Google', favicon: 'https://www.google.com/favicon.ico' },
+                'Google Classroom': { title: 'Home', favicon: 'https://ssl.gstatic.com//classroom//favicon.png' },
+                'Gmail': { title: 'Gmail', favicon: 'https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico' },
+                'Google Drive': { title: 'Home - Google Drive', favicon: 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png' },
+                'Bing': { title: 'Bing', favicon: 'https://www.bing.com/favicon.ico' },
+                'Outlook': { title: 'Outlook', favicon: 'https://outlook.live.com/owa/favicon.ico' },
+                'OneDrive': { title: 'My files - OneDrive', favicon: 'https://onedrive.live.com/favicon.ico' },
+                'Wikipedia': { title: 'Wikipedia', favicon: 'https://en.wikipedia.org/favicon.ico' },
+                'Edpuzzle': { title: 'Edpuzzle', favicon: 'https://edpuzzle.imgix.net/favicons/favicon-32.png' },
+                'IXL': { title: 'IXL | Math, Language Arts, Science, Social Studies, and Spanish', favicon: 'https://www.ixl.com/favicon.ico' },
+                'Canvas': { title: 'Log In to Canvas', favicon: 'https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico' },
+                'Khan Academy': { title: 'Khan Academy | Free Online Courses, Lessons & Practice', favicon: 'https://cdn.kastatic.org/images/favicon.ico' },
+                'YouTube': { title: 'YouTube', favicon: 'https://www.youtube.com/s/desktop/eb72fb02/img/favicon.ico' }
+            };
+
+            Object.keys(presets).forEach((preset) => {
+                const option = document.createElement('option');
+                option.value = preset;
+                option.textContent = preset;
+                faviconDropdown.appendChild(option);
+            });
+
+            faviconDropdown.addEventListener('change', (event) => {
+                const selected = presets[event.target.value];
+                if (selected) {
+                    document.title = selected.title;
+                    let link = document.querySelector('link[rel="shortcut icon"]');
+                    if (!link) {
+                        link = document.createElement('link');
+                        link.rel = 'shortcut icon';
+                        document.head.appendChild(link);
+                    }
+                    link.href = selected.favicon;
+                    localStorage.setItem('pageTitle', selected.title);
+                    localStorage.setItem('faviconUrl', selected.favicon);
+                }
+            });
+
+            const savedFavicon = localStorage.getItem('faviconUrl');
+            const savedTitle = localStorage.getItem('pageTitle');
+            if (savedFavicon && savedTitle) {
+                let link = document.querySelector('link[rel="shortcut icon"]');
+                if (!link) {
+                    link = document.createElement('link');
+                    link.rel = 'shortcut icon';
+                    document.head.appendChild(link);
+                }
+                link.href = savedFavicon;
+                document.title = savedTitle;
+            }
+        });
+    </script>
+</body>
+</html>

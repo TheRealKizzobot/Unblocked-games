@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+ <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/scripts/scripts.js"></script>
+    <script src="https://kit.fontawesome.com/30dbb05315.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/fontawsome.css">
+    <title>DK Proxies</title>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fade-out">
+        <div id="loading-spinner"></div>
+        <h1>Loading...</h1>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <span>DK Proxies</span>
+            <a class="btn" href="/index.html"><i class="fa-solid fa-home"></i></a>
+        </div>
+        <div class="icons">
+            <a class="btn" href="/pages/g@m3s.html"><i class="fa-solid fa-gamepad"></i></a>
+            <a class="btn" href="/pages/4pp$.html"><i class="fa-solid fa-border-all"></i></a>
+            <a class="btn" href="/pages/m0v1e$.html"><i class="fa-solid fa-film"></i></a>
+            <a class="btn" href="/pages/settings.html"><i class="fa-solid fa-gear"></i></a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Feature Cards -->
+        <section id="features">
+            <div id="game-container">
+                <iframe 
+                    id="game-iframe" 
+                    src="https://ubg100.github.io/games/tunnelrush/index.html" 
+                    frameborder="0"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Panic Key Logic
+            const keybind = localStorage.getItem('keybind') || '~'; // Default panic key
+            const sitefortab = localStorage.getItem('sitefortab') || 'https://canvas.instructure.com/login/canvas'; // Default panic site
+            
+            document.body.addEventListener('keydown', function(event) {
+                if (event.key === keybind) {
+                    window.location.href = sitefortab;
+                }
+            });
+
+            // Tab Cloaker Logic
+            const savedFaviconUrl = localStorage.getItem('faviconUrl');
+            const savedTitle = localStorage.getItem('pageTitle');
+
+            if (savedFaviconUrl) {
+                let link = document.querySelector('link[rel="shortcut icon"]');
+                if (!link) {
+                    link = document.createElement('link');
+                    link.rel = 'shortcut icon';
+                    document.head.appendChild(link);
+                }
+                link.href = savedFaviconUrl;
+            }
+
+            if (savedTitle) {
+                document.title = savedTitle;
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gatekeep Mode Logic
+            const gatekeepMode = localStorage.getItem('gatekeepMode') === 'true';
+            const logo = document.querySelector('.logo');
+            const title = document.getElementById('title');
+
+            function updateGatekeepUI() {
+                if (gatekeepMode) {
+                    logo.style.display = 'none';
+                    title.style.display = 'none';
+                } else {
+                    logo.style.display = 'block';
+                    title.style.display = 'block';
+                }
+            }
+
+            updateGatekeepUI();
+        });
+
+    </script>
+    <style>
+        #game-container {
+            width: 100%;
+            max-width: 14500px;
+            margin: 0 auto; /* Center the container */
+            aspect-ratio: 16 / 9; /* Maintain a 16:9 aspect ratio */
+            position: relative;
+            overflow: hidden; /* Ensure no overflow */
+            background: #000; /* Optional: Add a background for contrast */
+        }
+        
+        #game-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block; /* Remove any inline gaps */
+            position: absolute; /* Ensure full coverage of the container */
+            top: 0;
+            left: 0;
+            transform: scale(0.8); /* Adjust scale as needed */
+            transform-origin: top left; /* Keep scaling anchored */
+            width: 125%; /* Inverse of the scale for proper size */
+            height: 125%; /* Inverse of the scale for proper size */
+        }
+        </style>
+</body>
+</html>

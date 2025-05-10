@@ -1,0 +1,252 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: Arial, sans-serif;
+    background-color: #505050; /* Light gray background */
+    color: #333; /* Dark text for contrast */
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #333; /* Dark gray background */
+    color: #5e5e5e; /* White text */
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo span {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #00aaff; /* Azure highlight */
+}
+
+.navbar .nav-right a {
+    margin: 0 10px;
+    color: #ffffff;
+    font-size: 1.2em;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.navbar .nav-right a:hover {
+    color: #ffffff; /* Azure on hover */
+}
+
+/* Main Content */
+main {
+    padding: 40px 20px;
+}
+
+h1, h2 {
+    margin-bottom: 20px;
+    color: #00b7ff;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #ffffff;
+}
+
+/* Sections */
+section {
+    background: #3f7e9b; /* White cards */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: transform 0.2s;
+}
+
+section:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+}
+
+/* Buttons */
+button {
+    background-color: #00aaff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #0088cc;
+    transform: translateY(-2px);
+}
+
+button:active {
+    background-color: #006699; /* Even darker on click */
+}
+
+/* Inputs and Selects */
+select, input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1em;
+    width: 100%;
+    max-width: 300px;
+}
+
+select:focus, input:focus {
+    outline: none;
+    border-color: #00aaff; /* Azure border on focus */
+    box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+}
+
+/* Input Groups */
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+/* Links */
+a.btn {
+    background-color: #00aaff; /* Azure button links */
+    color: #2e2e2e;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+a.btn:hover {
+    background-color: #0088cc; /* Darker azure on hover */
+}
+
+/* Loading Screen */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+#loading-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 6px solid #fff;
+    border-top-color: #00aaff; /* Azure spinner */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Cards */
+.card {
+    background: #2c2c2c;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+    color: white;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Slight lift */
+}
+
+.card h2 {
+    color: #00aaff; /* Azure highlight */
+}
+
+.card a {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* Misc */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#output, #gatekeep-status {
+    font-weight: bold;
+    color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar .nav-right {
+        margin-top: 10px;
+    }
+
+    main {
+        padding: 20px;
+    }
+}
+
+.center section {
+    resize: both;
+    overflow: auto;
+  }
+
+.game-container {
+    width: auto;
+    max-width: 1600px;
+    height: auto;
+    overflow: hidden;
+    position: relative;
+    background-color: #000;
+}
+
+#fullscreen-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 100;
+}
