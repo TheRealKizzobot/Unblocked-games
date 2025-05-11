@@ -72,10 +72,6 @@ section {
     transition: transform 0.2s;
 }
 
-section:hover {
-    transform: translateY(-5px); /* Slight lift on hover */
-}
-
 /* Buttons */
 button {
     background-color: #00aaff;
