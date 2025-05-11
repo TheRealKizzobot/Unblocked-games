@@ -27,7 +27,7 @@ html, body {
 .navbar .logo span {
     font-size: 1.5em;
     font-weight: bold;
-    color: #00aaff; /* Azure highlight */
+    color: #080808; /* Azure highlight */
 }
 
 .navbar .nav-right a {
@@ -49,7 +49,7 @@ main {
 
 h1, h2 {
     margin-bottom: 20px;
-    color: #00b7ff;
+    color: #080808;
     text-align: center;
 }
 
@@ -81,12 +81,12 @@ button {
     padding: 10px 20px;
     font-size: 1em;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s, transform;
 }
 
 button:hover {
     background-color: #0088cc;
-    transform: translateY(-2px);
+    transform: scale(1.1);
 }
 
 button:active {
