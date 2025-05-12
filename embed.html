@@ -15,13 +15,26 @@
             height: 1200px; /* Adjust the height as needed */
         }
     </style>
+    <script src="/uv/uv.bundle.js"></script>
+    <script src="/uv/uv.config.js"></script>
+    <script src="/baremux/index.js"></script>
+    
+    <script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/uv/sw.js");
+        });
+    }
+    </script>
 </head>
 <body>
+        <!-- Loading Screen -->
         <div id="loading-screen" class="fade-out">
             <div id="loading-spinner"></div>
             <h1>Loading...</h1>
         </div>
     
+        <!-- Navbar -->
         <div class="navbar">
             <div class="logo">
                 <span>DK Proxies</span>
@@ -35,45 +48,12 @@
             </div>
         </div>
     
+    <!-- The iframe where the game will be embedded -->
     <iframe id="gameframe" class="gameframe"></iframe>
 
     <script>
-    // --- Ultraviolet Configuration ---
-    const ultraviolet = {
-        prefix: '/uv/',  // Or whatever prefix you configure on your Ultraviolet server
-        encodeUrl: (url) => btoa(url), //  Use btoa
-        decodeUrl: (encodedUrl) => atob(encodedUrl), //  Use atob
-    };
-
-    /**
-     * Creates a URL to access a resource through the Ultraviolet proxy.
-     * @param {string} targetUrl - The URL of the resource to access.
-     * @returns {string} The proxied URL.
-     */
-    function proxify(targetUrl) {
-        return ultraviolet.prefix + ultraviolet.encodeUrl(targetUrl);
-    }
-
-    /**
-     * Registers the Ultraviolet service worker.
-     */
-    function registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register(`${ultraviolet.prefix}uv.sw.js`)
-                .then(registration => {
-                    console.log('Service worker registered:', registration);
-                })
-                .catch(error => {
-                    console.error('Service worker registration failed:', error);
-                });
-        } else {
-            console.warn('Service workers are not supported in this browser.');
-        }
-    }
-
+    location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
     document.addEventListener('DOMContentLoaded', function () {
-        registerServiceWorker(); // Register the service worker
-
         // Get the base64 encoded URL from the hash
         const base64Url = window.location.hash.substring(1); // Remove the '#'
         
@@ -81,22 +61,39 @@
             return; // No base64 URL provided
         }
 
-        try {
-            // Decode the base64 URL
-            const decodedUrl = atob(base64Url);
+        // Decode the base64 URL
+        const decodedUrl = atob(base64Url); // Decode the base64 encoded URL
 
-            // Construct the proxied URL
-            const proxiedUrl = proxify(decodedUrl);
+        // Prepend the required URL
+        const finalUrl = `${decodedUrl}`;
 
-            // Set the iframe source to the proxied URL
-            const iframe = document.getElementById('gameframe');
-            iframe.src = proxiedUrl;
+        // Fetch the content from the final URL
+        fetch(finalUrl)
+            .then(response => response.text())
+            .then(html => {
+                // Create a temporary element to parse the HTML content
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
 
-        } catch (error) {
-            console.error('Error decoding or proxying URL:', error);
-            // Optionally set a default error page for the iframe
-            document.getElementById('gameframe').src = "/error.html"; 
-        }
+                // Find the element with id="features" in the fetched content
+                const featuresContent = tempDiv.querySelector('main');
+                
+                if (featuresContent) {
+                    // Get the iframe and inject the features content into it
+                    const iframe = document.getElementById('gameframe');
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    // Clear iframe content and insert the extracted features content
+                    iframeDoc.open();
+                    iframeDoc.write(featuresContent.innerHTML);
+                    iframeDoc.close();
+                } else {
+                    console.error('No #features element found in the fetched page.');
+                }
+            })
+            .catch(err => {
+                console.error('Error fetching page:', err);
+            });
     });
 
         document.addEventListener('DOMContentLoaded', function() {
