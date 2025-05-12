@@ -8,6 +8,16 @@
     <link rel="stylesheet" href="/css/index.css">
     <script src="https://kit.fontawesome.com/30dbb05315.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/fontawsome.css">
+    <script src="/uv/uv.bundle.js"></script>
+    <script src="/uv/uv.config.js"></script>
+    <script src="/baremux/index.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/uv/sw.js");
+        });
+      }
+    </script>
     <style>
         .gameframe {
             border: none;
@@ -17,78 +27,60 @@
     </style>
 </head>
 <body>
-        <!-- Loading Screen -->
-        <div id="loading-screen" class="fade-out">
-            <div id="loading-spinner"></div>
-            <h1>Loading...</h1>
+    <div id="loading-screen" class="fade-out">
+        <div id="loading-spinner"></div>
+        <h1>Loading...</h1>
+    </div>
+
+    <div class="navbar">
+        <div class="logo">
+            <span>DK Proxies</span>
+            <a class="btn" href="/index.html"><i class="fa-solid fa-home"></i></a>
         </div>
-    
-        <!-- Navbar -->
-        <div class="navbar">
-            <div class="logo">
-                <span>DK Proxies</span>
-                <a class="btn" href="/index.html"><i class="fa-solid fa-home"></i></a>
-            </div>
-            <div class="icons">
-                <a class="btn" href="/pages/g@m3s.html"><i class="fa-solid fa-gamepad"></i></a>
-                <a class="btn" href="/pages/4pp$.html"><i class="fa-solid fa-border-all"></i></a>
-                <a class="btn" href="/pages/m0v1e$.html"><i class="fa-solid fa-film"></i></a>
-                <a class="btn" href="/pages/settings.html"><i class="fa-solid fa-gear"></i></a>
-            </div>
+        <div class="icons">
+            <a class="btn" href="/pages/g@m3s.html"><i class="fa-solid fa-gamepad"></i></a>
+            <a class="btn" href="/pages/4pp$.html"><i class="fa-solid fa-border-all"></i></a>
+            <a class="btn" href="/pages/m0v1e$.html"><i class="fa-solid fa-film"></i></a>
+            <a class="btn" href="/pages/settings.html"><i class="fa-solid fa-gear"></i></a>
         </div>
-    
-    <!-- The iframe where the game will be embedded -->
+    </div>
+
     <iframe id="gameframe" class="gameframe"></iframe>
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Get the base64 encoded URL from the hash
         const base64Url = window.location.hash.substring(1); // Remove the '#'
-        
+
         if (!base64Url) {
-            return; // No base64 URL provided
+            console.warn("No base64 URL provided in the hash.");
+            // Optionally, set a default/error page.
+            document.getElementById('gameframe').src = "/error.html"; //example
+            return;
         }
 
         // Decode the base64 URL
-        const decodedUrl = atob(base64Url); // Decode the base64 encoded URL
+        try{
+            const decodedUrl = atob(base64Url);
+             // Prepend the required URL - **Crucially, you need to proxy this URL**
+            const proxiedUrl = `/proxy/?url=${encodeURIComponent(decodedUrl)}`; // Construct the Cloud Function URL
+            const iframe = document.getElementById('gameframe');
+            iframe.src = proxiedUrl; // Set the iframe source to the proxied URL
 
-        // Prepend the required URL
-        const finalUrl = `${decodedUrl}`;
+        } catch (error){
+            console.error("Error decoding base64 URL", error);
+            document.getElementById('gameframe').src = "/error.html"; //example
 
-        // Fetch the content from the final URL
-        fetch(finalUrl)
-            .then(response => response.text())
-            .then(html => {
-                // Create a temporary element to parse the HTML content
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
+        }
 
-                // Find the element with id="features" in the fetched content
-                const featuresContent = tempDiv.querySelector('main');
-                
-                if (featuresContent) {
-                    // Get the iframe and inject the features content into it
-                    const iframe = document.getElementById('gameframe');
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    
-                    // Clear iframe content and insert the extracted features content
-                    iframeDoc.open();
-                    iframeDoc.write(featuresContent.innerHTML);
-                    iframeDoc.close();
-                } else {
-                    console.error('No #features element found in the fetched page.');
-                }
-            })
-            .catch(err => {
-                console.error('Error fetching page:', err);
-            });
+
     });
 
         document.addEventListener('DOMContentLoaded', function() {
             // Panic Key Logic
             const keybind = localStorage.getItem('keybind') || '~'; // Default panic key
             const sitefortab = localStorage.getItem('sitefortab') || 'https://canvas.instructure.com/login/canvas'; // Default panic site
-            
+
             document.body.addEventListener('keydown', function(event) {
                 if (event.key === keybind) {
                     window.location.href = sitefortab;
@@ -132,7 +124,7 @@
             updateGatekeepUI();
         });
 
-      
+
     </script>
 </body>
 </html>

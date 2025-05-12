@@ -5,6 +5,19 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/proxy/**",
+        "function": "proxy"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
+  },
+  "functions": {
+    "runtime": "nodejs18" // Or a later supported version
   }
 }
