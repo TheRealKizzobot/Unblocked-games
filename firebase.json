@@ -18,6 +18,6 @@
     ]
   },
   "functions": {
-    "runtime": "nodejs18" // Or a later supported version
+    "runtime": "nodejs18"
   }
 }
