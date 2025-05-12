@@ -5,19 +5,27 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/proxy/**",
-        "function": "proxy"
-      },
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
     ]
   },
-  "functions": {
-    "runtime": "nodejs18"
-  }
+  "functions": [
+    {
+      "runtime": "nodejs18",
+      "source": "functions",
+      "codebase": "default"
+    },
+    {
+      "source": "functions",
+      "codebase": "unblocked-games",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
 }
