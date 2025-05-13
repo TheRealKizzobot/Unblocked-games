@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Embed</title>
@@ -12,113 +12,111 @@
     <script src="/uv/uv.config.js"></script>
     <script src="/baremux/index.js"></script>
     <script>
-      if ("serviceWorker" in navigator) {
+    if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
-          navigator.serviceWorker.register("/uv/sw.js");
+        navigator.serviceWorker.register("/uv/sw.js");
         });
-      }
+    }
     </script>
     <style>
-      .gameframe {
+    .gameframe {
         border: none;
         width: 100%;
         height: 1200px;
         /* Adjust the height as needed */
-      }
+    }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div id="loading-screen" class="fade-out">
-      <div id="loading-spinner"></div>
-      <h1>Loading...</h1>
+    <div id="loading-spinner"></div>
+    <h1>Loading...</h1>
     </div>
     <div class="navbar">
-      <div class="logo">
+    <div class="logo">
         <span>DK Proxies</span>
         <a class="btn" href="/index.html">
-          <i class="fa-solid fa-home"></i>
+        <i class="fa-solid fa-home"></i>
         </a>
-      </div>
-      <div class="icons">
+    </div>
+    <div class="icons">
         <a class="btn" href="/pages/g@m3s.html">
-          <i class="fa-solid fa-gamepad"></i>
+        <i class="fa-solid fa-gamepad"></i>
         </a>
         <a class="btn" href="/pages/4pp$.html">
-          <i class="fa-solid fa-border-all"></i>
+        <i class="fa-solid fa-border-all"></i>
         </a>
         <a class="btn" href="/pages/m0v1e$.html">
-          <i class="fa-solid fa-film"></i>
+        <i class="fa-solid fa-film"></i>
         </a>
         <a class="btn" href="/pages/settings.html">
-          <i class="fa-solid fa-gear"></i>
+        <i class="fa-solid fa-gear"></i>
         </a>
-      </div>
+    </div>
     </div>
     <iframe id="gameframe" class="gameframe"></iframe>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Get the base64 encoded URL from the hash
-        const base64Url = window.location.hash.substring(1); // Remove the '#'
-        if (!base64Url) {
-          console.warn("No base64 URL provided in the hash.");
-          // Optionally, set a default/error page.
-          document.getElementById('gameframe').src = "/error.html"; //example
-          return;
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Get the base64 URL from the hash
+        const base64Url = window.location.hash.substring(1);
+        let targetUrl;
+        try{
+            targetUrl = atob(base64Url);
+        } catch(e){
+            console.error("error decoding", e);
+            document.getElementById('gameframe').src = "/error.html";
+            return;
         }
-        // Decode the base64 URL
-        try {
-          const decodedUrl = atob(base64Url);
-          // Prepend the required URL - **Crucially, you need to proxy this URL**
-          const proxiedUrl = `/proxy/?url=${encodeURIComponent(decodedUrl)}`; // Construct the Cloud Function URL
-          const iframe = document.getElementById('gameframe');
-          iframe.src = proxiedUrl; // Set the iframe source to the proxied URL
-        } catch (error) {
-          console.error("Error decoding base64 URL", error);
-          document.getElementById('gameframe').src = "/error.html"; //example
-        }
-      });
-      document.addEventListener('DOMContentLoaded', function() {
+
+        const cloudFunctionUrl = `https://unblocked-games-2463f.cloudfunctions.net/simpleProxy?url=${encodeURIComponent(targetUrl)}`;
+
+        const iframe = document.getElementById('gameframe');
+        iframe.src = cloudFunctionUrl;
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
         // Panic Key Logic
         const keybind = localStorage.getItem('keybind') || '~'; // Default panic key
         const sitefortab = localStorage.getItem('sitefortab') || 'https://canvas.instructure.com/login/canvas'; // Default panic site
         document.body.addEventListener('keydown', function(event) {
-          if (event.key === keybind) {
+        if (event.key === keybind) {
             window.location.href = sitefortab;
-          }
+        }
         });
         // Tab Cloaker Logic
         const savedFaviconUrl = localStorage.getItem('faviconUrl');
         const savedTitle = localStorage.getItem('pageTitle');
         if (savedFaviconUrl) {
-          let link = document.querySelector('link[rel="shortcut icon"]');
-          if (!link) {
+        let link = document.querySelector('link[rel="shortcut icon"]');
+        if (!link) {
             link = document.createElement('link');
             link.rel = 'shortcut icon';
             document.head.appendChild(link);
-          }
-          link.href = savedFaviconUrl;
+        }
+        link.href = savedFaviconUrl;
         }
         if (savedTitle) {
-          document.title = savedTitle;
+        document.title = savedTitle;
         }
-      });
-      document.addEventListener('DOMContentLoaded', function() {
+    });
+    document.addEventListener('DOMContentLoaded', function() {
         // Gatekeep Mode Logic
         const gatekeepMode = localStorage.getItem('gatekeepMode') === 'true';
         const logo = document.querySelector('.logo');
         const title = document.getElementById('title');
 
         function updateGatekeepUI() {
-          if (gatekeepMode) {
+        if (gatekeepMode) {
             logo.style.display = 'none';
             title.style.display = 'none';
-          } else {
+        } else {
             logo.style.display = 'block';
             title.style.display = 'block';
-          }
+        }
         }
         updateGatekeepUI();
-      });
+    });
     </script>
-  </body>
+</body>
 </html>
