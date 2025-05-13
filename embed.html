@@ -12,96 +12,91 @@
         .gameframe {
             border: none;
             width: 100%;
-            height: 1200px; /* Adjust the height as needed */
+            height: 1200px;
         }
     </style>
     <script src="/uv/uv.bundle.js"></script>
     <script src="/uv/uv.config.js"></script>
     <script src="/baremux/index.js"></script>
-    
     <script>
-    if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-            navigator.serviceWorker.register("/uv/sw.js");
-        });
-    }
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/uv/sw.js");
+            });
+        }
     </script>
 </head>
 <body>
-        <!-- Loading Screen -->
-        <div id="loading-screen" class="fade-out">
-            <div id="loading-spinner"></div>
-            <h1>Loading...</h1>
-        </div>
+    <div id="loading-screen" class="fade-out">
+        <div id="loading-spinner"></div>
+        <h1>Loading...</h1>
+    </div>
     
-        <!-- Navbar -->
-        <div class="navbar">
-            <div class="logo">
-                <span>DK Proxies</span>
-                <a class="btn" href="/index.html"><i class="fa-solid fa-home"></i></a>
-            </div>
-            <div class="icons">
-                <a class="btn" href="/pages/g@m3s.html"><i class="fa-solid fa-gamepad"></i></a>
-                <a class="btn" href="/pages/4pp$.html"><i class="fa-solid fa-border-all"></i></a>
-                <a class="btn" href="/pages/m0v1e$.html"><i class="fa-solid fa-film"></i></a>
-                <a class="btn" href="/pages/settings.html"><i class="fa-solid fa-gear"></i></a>
-            </div>
+    <div class="navbar">
+        <div class="logo">
+            <span>DK Proxies</span>
+            <a class="btn" href="/index.html"><i class="fa-solid fa-home"></i></a>
         </div>
+        <div class="icons">
+            <a class="btn" href="/pages/g@m3s.html"><i class="fa-solid fa-gamepad"></i></a>
+            <a class="btn" href="/pages/4pp$.html"><i class="fa-solid fa-border-all"></i></a>
+            <a class="btn" href="/pages/m0v1e$.html"><i class="fa-solid fa-film"></i></a>
+            <a class="btn" href="/pages/settings.html"><i class="fa-solid fa-gear"></i></a>
+        </div>
+    </div>
     
-    <!-- The iframe where the game will be embedded -->
     <iframe id="gameframe" class="gameframe"></iframe>
 
     <script>
-    location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
-    document.addEventListener('DOMContentLoaded', function () {
-        // Get the base64 encoded URL from the hash
-        const base64Url = window.location.hash.substring(1); // Remove the '#'
-        
-        if (!base64Url) {
-            return; // No base64 URL provided
+        const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+        const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
+        const bareUrl = (location.protocol === "https:" ? "https" : "http") + "://" + location.host + "/bare/";
+        const gameFrame = document.getElementById('gameframe');
+
+        async function loadUrl(base64Url) {
+            if (!base64Url) {
+                console.error("Base64 URL is empty");
+                gameFrame.src = "/404.html";
+                return;
+            }
+
+            try {
+                const decodedUrl = atob(base64Url);
+                if (!await connection.getTransport()) {
+                    await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+                }
+                const proxiedUrl = __uv$config.prefix + __uv$config.encodeUrl(decodedUrl);
+
+                fetch(proxiedUrl)
+                .then(response => response.text())
+                .then(proxiedHtml => {
+                        gameFrame.contentDocument.open();
+                        gameFrame.contentDocument.write(proxiedHtml);
+                        gameFrame.contentDocument.close();
+                })
+                .catch(error =>{
+                    console.error("Error fetching proxied content", error);
+                    gameFrame.src="/404.html"
+                })
+
+            } catch (error) {
+                console.error("Error loading URL:", error);
+                gameFrame.src = "/404.html";
+            }
         }
 
-        // Decode the base64 URL
-        const decodedUrl = atob(base64Url); // Decode the base64 encoded URL
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.location.hash) {
+                const base64Url = window.location.hash.substring(1);
+                loadUrl(base64Url);
+            } else {
+                gameFrame.src = "/404.html";
+            }
 
-        // Prepend the required URL
-        const finalUrl = `${decodedUrl}`;
-
-        // Fetch the content from the final URL
-        fetch(finalUrl)
-            .then(response => response.text())
-            .then(html => {
-                // Create a temporary element to parse the HTML content
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
-
-                // Find the element with id="features" in the fetched content
-                const featuresContent = tempDiv.querySelector('main');
-                
-                if (featuresContent) {
-                    // Get the iframe and inject the features content into it
-                    const iframe = document.getElementById('gameframe');
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    
-                    // Clear iframe content and insert the extracted features content
-                    iframeDoc.open();
-                    iframeDoc.write(featuresContent.innerHTML);
-                    iframeDoc.close();
-                } else {
-                    console.error('No #features element found in the fetched page.');
-                }
-            })
-            .catch(err => {
-                console.error('Error fetching page:', err);
-            });
-    });
-
-        document.addEventListener('DOMContentLoaded', function() {
             // Panic Key Logic
-            const keybind = localStorage.getItem('keybind') || '~'; // Default panic key
-            const sitefortab = localStorage.getItem('sitefortab') || 'https://canvas.instructure.com/login/canvas'; // Default panic site
-            
-            document.body.addEventListener('keydown', function(event) {
+            const keybind = localStorage.getItem('keybind') || '~';
+            const sitefortab = localStorage.getItem('sitefortab') || 'https://canvas.instructure.com/login/canvas';
+            document.body.addEventListener('keydown', function (event) {
                 if (event.key === keybind) {
                     window.location.href = sitefortab;
                 }
@@ -110,7 +105,6 @@
             // Tab Cloaker Logic
             const savedFaviconUrl = localStorage.getItem('faviconUrl');
             const savedTitle = localStorage.getItem('pageTitle');
-
             if (savedFaviconUrl) {
                 let link = document.querySelector('link[rel="shortcut icon"]');
                 if (!link) {
@@ -120,17 +114,14 @@
                 }
                 link.href = savedFaviconUrl;
             }
-
             if (savedTitle) {
                 document.title = savedTitle;
             }
-        });
-        document.addEventListener('DOMContentLoaded', function () {
+
             // Gatekeep Mode Logic
             const gatekeepMode = localStorage.getItem('gatekeepMode') === 'true';
             const logo = document.querySelector('.logo');
             const title = document.getElementById('title');
-
             function updateGatekeepUI() {
                 if (gatekeepMode) {
                     logo.style.display = 'none';
@@ -140,11 +131,9 @@
                     title.style.display = 'block';
                 }
             }
-
             updateGatekeepUI();
         });
 
-      
     </script>
 </body>
 </html>
