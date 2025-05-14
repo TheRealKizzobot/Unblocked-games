@@ -1,45 +1,62 @@
 const functions = require('firebase-functions');
-const https = require('https'); // For secure websites
-const http = require('http'); // For regular websites
+const https = require('https');
+const http = require('http');
 
-exports.simpleProxy = functions.https.onRequest((req, res) => {
-	const targetUrl = req.query.url;
+exports.simpleProxy = functions
+  .runWith({ timeoutSeconds: 30 }) // Adjust as needed
+  .https.onRequest((req, res) => {
+    // Handle CORS preflight requests
+    if (req.method === 'OPTIONS') {
+      res.set({
+        'Access-Control-Allow-Origin': 'https://games.dkservers.space',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      });
+      res.status(204).send('');
+      return;
+    }
 
-	if (!targetUrl) {
-		res.status(400).send('Please provide a URL to proxy.');
-		return;
-	}
+    const targetUrl = req.query.url;
 
-	let parsedUrl;
-	try {
-		parsedUrl = new URL(targetUrl);
-	} catch (error) {
-		res.status(400).send('Invalid URL provided.');
-		return;
-	}
+    if (!targetUrl) {
+      res.status(400).send('Please provide a URL to proxy.');
+      return;
+    }
 
-	const protocol = parsedUrl.protocol === 'https:' ? https : http;
+    let parsedUrl;
+    try {
+      parsedUrl = new URL(targetUrl);
+    } catch (error) {
+      res.status(400).send('Invalid URL provided.');
+      return;
+    }
 
-	protocol.get(targetUrl, (targetRes) => {
-		let data = '';
-		targetRes.on('data', (chunk) => {
-			data += chunk;
-		});
-		targetRes.on('end', () => {
-			res.set({
-				'Content-Type': targetRes.headers['content-type'],
-				// Important: Only allow your own site!
-				'Access-Control-Allow-Origin': 'https://games.dkservers.space',
-			});
-			res.status(targetRes.statusCode);
-			res.send(data);
-		});
-		targetRes.on('error', (error) => {
-			console.error('Error fetching URL:', error);
-			res.status(500).send('Failed to fetch the requested URL.');
-		});
-	}).on('error', (error) => {
-		console.error('Error with the request:', error);
-		res.status(500).send('Error making the request.');
-	});
-});
+    // OPTIONAL: Whitelist domains
+    const allowedHosts = ['example.com', 'another-allowed-site.com'];
+    if (!allowedHosts.includes(parsedUrl.hostname)) {
+      res.status(403).send('This domain is not allowed.');
+      return;
+    }
+
+    const protocol = parsedUrl.protocol === 'https:' ? https : http;
+
+    const options = {
+      headers: {
+        'User-Agent': req.headers['user-agent'] || 'Mozilla/5.0',
+      },
+    };
+
+    const proxyReq = protocol.get(targetUrl, options, (targetRes) => {
+      res.set({
+        'Content-Type': targetRes.headers['content-type'] || 'text/plain',
+        'Access-Control-Allow-Origin': 'https://games.dkservers.space',
+      });
+      res.status(targetRes.statusCode || 200);
+      targetRes.pipe(res);
+    });
+
+    proxyReq.on('error', (error) => {
+      console.error('Error with the request:', error);
+      res.status(500).send('Error making the request.');
+    });
+  });
