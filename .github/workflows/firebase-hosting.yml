@@ -1,35 +1,34 @@
 name: Deploy to Firebase Hosting
+
 on:
   push:
     branches:
-      - main # Change this to your deployment branch if different
+      - main  # change if your deploy branch is different
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '20.x' # Or your preferred Node.js version
+          node-version: '20'
+
       - name: Install dependencies
         run: npm install
-      # Add a build step if you are using a framework like React or Angular
-      # - name: Build project
+
+      # If your project has a build step (like React/Vite), enable this:
+      # - name: Build
       #   run: npm run build
+
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          channelId: live # Or your target channel (e.g., 'live', 'preview')
-          projectId: unblocked-games-2463f # **Replace with your Firebase project ID**
-      - name: Deploy to Firebase Functions
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          #deployPath: './functions'
           channelId: live
           projectId: unblocked-games-2463f
