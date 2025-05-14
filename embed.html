@@ -1,3 +1,4 @@
+// embed.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,7 +48,8 @@
     
     <iframe id="gameframe" class="gameframe"></iframe>
 
-    <script>
+    <script type="module">
+        import { BareMuxClient as BareMux } from '/baremux/index.js';
         const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
         const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
         const bareUrl = (location.protocol === "https:" ? "https" : "http") + "://" + location.host + "/bare/";

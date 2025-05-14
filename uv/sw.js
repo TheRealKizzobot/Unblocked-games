@@ -7,9 +7,21 @@
  */
 importScripts('uv.bundle.js');
 importScripts('uv.config.js');
-importScripts(__uv$config.sw || 'uv.sw.js');
+// importScripts(__uv$config.sw || 'uv.sw.js'); // REMOVED THIS LINE
 
 const uv = new UVServiceWorker();
+
+self.addEventListener('install', (event) => { // Added install and activate events.
+  event.waitUntil(self.skipWaiting());
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('fetch', (event) => {
+    event.respondWith(handleRequest(event));
+});
 
 async function handleRequest(event) {
     if (uv.route(event)) {
@@ -18,7 +30,3 @@ async function handleRequest(event) {
     
     return await fetch(event.request)
 }
-
-self.addEventListener('fetch', (event) => {
-    event.respondWith(handleRequest(event));
-});
