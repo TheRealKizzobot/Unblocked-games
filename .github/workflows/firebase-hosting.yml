@@ -19,14 +19,14 @@ jobs:
       # - name: Build project
       #   run: npm run build
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v4
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelId: live # Or your target channel (e.g., 'live', 'preview')
           projectId: unblocked-games-2463f # **Replace with your Firebase project ID**
       - name: Deploy to Firebase Functions
-        uses: FirebaseExtended/action-hosting-deploy@v4
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
