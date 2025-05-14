@@ -1,39 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Ultraviolet Configuration ---
-    const ultraviolet = {
-        prefix: '/uv/',  // Or whatever prefix you configure on your Ultraviolet server
-        encodeUrl: (url) => btoa(url), //  Use btoa
-        decodeUrl: (encodedUrl) => atob(encodedUrl), //  Use atob
-    };
-
-    // --- Helper Functions ---
-
-    /**
-     * Creates a URL to access a resource through the Ultraviolet proxy.
-     * @param {string} targetUrl - The URL of the resource to access.
-     * @returns {string} The proxied URL.
-     */
-    function proxify(targetUrl) {
-        return ultraviolet.prefix + ultraviolet.encodeUrl(targetUrl);
-    }
-
-    /**
-     * Registers the Ultraviolet service worker.
-     */
-    function registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register(`${ultraviolet.prefix}uv.sw.js`)
-                .then(registration => {
-                    console.log('Service worker registered:', registration);
-                })
-                .catch(error => {
-                    console.error('Service worker registration failed:', error);
-                });
-        } else {
-            console.warn('Service workers are not supported in this browser.');
-        }
-    }
-
     // --- UI Element Selectors ---
     const setkeybindBtn = document.getElementById('setkeybind');
     const outputDisplay = document.getElementById('output');
