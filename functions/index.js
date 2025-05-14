@@ -3,9 +3,9 @@ const https = require('https');
 const http = require('http');
 
 exports.simpleProxy = functions
-  .runWith({ timeoutSeconds: 30 }) // Adjust as needed
+  .runWith({ timeoutSeconds: 30 }) // Optional: increase timeout
   .https.onRequest((req, res) => {
-    // Handle CORS preflight requests
+    // Handle CORS preflight
     if (req.method === 'OPTIONS') {
       res.set({
         'Access-Control-Allow-Origin': 'https://games.dkservers.space',
@@ -31,8 +31,8 @@ exports.simpleProxy = functions
       return;
     }
 
-    // OPTIONAL: Whitelist domains
-    const allowedHosts = ['example.com', 'another-allowed-site.com'];
+    // OPTIONAL: Whitelist domains to prevent abuse
+    const allowedHosts = ['games.dkservers.space', 'unblocked.dkservers.space']; // Change these!
     if (!allowedHosts.includes(parsedUrl.hostname)) {
       res.status(403).send('This domain is not allowed.');
       return;
