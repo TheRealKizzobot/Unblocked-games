@@ -9,7 +9,7 @@ importScripts('uv.bundle.js');
 importScripts('uv.config.js');
 // importScripts(__uv$config.sw || 'uv.sw.js'); // REMOVED THIS LINE
 
-const uv = new UVServiceWorker();
+const uv = new ServiceWorker();
 
 self.addEventListener('install', (event) => { // Added install and activate events.
   event.waitUntil(self.skipWaiting());
