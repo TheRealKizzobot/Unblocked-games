@@ -1,7 +1,7 @@
 import { BareHeaders, maxRedirects } from './BareTypes.js';
-import { findSwitcher } from './Switcher';
+import { findSwitcher } from './Switcher.js';
 import { WebSocketFields } from './snapshot.js';
-import { validProtocol } from './webSocket';
+import { validProtocol } from './webSocket.js';
 
 
 // get the unhooked value

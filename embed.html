@@ -63,9 +63,10 @@
 
             try {
                 const decodedUrl = atob(base64Url);
-                if (!await connection.getTransport()) {
-                    await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-                }
+                // Remove the connection.setTransport()
+                // if (!await connection.getTransport()) {
+                //     await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+                // }
                 const proxiedUrl = __uv$config.prefix + __uv$config.encodeUrl(decodedUrl);
 
                 fetch(proxiedUrl)
