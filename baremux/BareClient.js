@@ -1,4 +1,4 @@
-import { BareHeaders, maxRedirects } from './BareTypes';
+import { BareHeaders, maxRedirects } from './BareTypes.js';
 import { findSwitcher } from './Switcher';
 import { WebSocketFields } from './snapshot.js';
 import { validProtocol } from './webSocket';
