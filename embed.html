@@ -36,10 +36,6 @@
             <span>DK Proxies</span>
             <a class="btn" href="/index.html"><i class="fa-solid fa-home"></i></a>
             <script type="module">
-                //import { BareMuxClient as BareMux } from '/baremux/index.js';
-                //const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-                //const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
-                //const bareUrl = (location.protocol === "https:" ? "https" : "http") + "://" + location.host + "/bare/";
                 const gameFrame = document.getElementById('gameframe');
         
                 async function loadUrl(base64Url) {
@@ -51,10 +47,6 @@
         
                     try {
                         const decodedUrl = atob(base64Url);
-                        // Remove the connection.setTransport()
-                        // if (!await connection.getTransport()) {
-                        //     await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-                        // }
                         const proxiedUrl = __uv$config.prefix + __uv$config.encodeUrl(decodedUrl);
         
                         fetch(proxiedUrl)
