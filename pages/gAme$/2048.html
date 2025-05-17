@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Container</title>
     <link rel="stylesheet" href="/css/index.css">
-    <script src="/scripts/scripts.js"></script>
     <script src="https://kit.fontawesome.com/30dbb05315.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/fontawsome.css">
-    <title>DK Proxies</title>
     <script src="/uv/uv.bundle.js"></script>
     <script src="/uv/uv.config.js"></script>
     <script>
@@ -17,25 +16,6 @@
             });
         }
     </script>
-</head>
-<body>
-    <div id="loading-screen" class="fade-out">
-        <div id="loading-spinner"></div>
-        <h1>Loading...</h1>
-    </div>
-
-    <main>
-        <section id="features">
-            <div id="game-container">
-                <iframe
-                    id="game-iframe"
-                    frameborder="0"
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </section>
-    </main>
-
     <style>
         #game-container {
             width: 100%;
@@ -61,36 +41,45 @@
             height: 125%;
         }
     </style>
+</head>
+<body>
+    <div id="loading-screen" class="fade-out">
+        <div id="loading-spinner"></div>
+        <h1>Loading...</h1>
+    </div>
+
+    <div class="navbar">
+        <div class="logo">
+            <span>DK Proxies</span>
+            <a class="btn" href="/index.html"><i class="fa-solid fa-home"></i></a>
+        </div>
+        <div class="icons">
+            <a class="btn" href="/pages/g@m3s.html"><i class="fa-solid fa-gamepad"></i></a>
+            <a class="btn" href="/pages/4pp$.html"><i class="fa-solid fa-border-all"></i></a>
+            <a class="btn" href="/pages/m0v1e$.html"><i class="fa-solid fa-film"></i></a>
+            <a class="btn" href="/pages/settings.html"><i class="fa-solid fa-gear"></i></a>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <iframe
+            id="game-iframe"
+            frameborder="0"
+            allowfullscreen>
+        </iframe>
+    </div>
 
     <script type="module">
         const gameFrame = document.getElementById('game-iframe');
-        //  IMPORTANT:  Change this URL to the actual URL of the game you want to proxy
-        const gameUrl = "https://playfreegamesonlinewithoutdownloading.github.io/2048.html";
+        const targetGameUrl = "https://playfreegamesonlinewithoutdownloading.github.io/2048.html";  // The URL of the game to proxy
 
         async function loadGame() {
-            if (!gameUrl) {
-                console.error("Game URL is empty");
-                gameFrame.src = "/404.html";
-                return;
-            }
-
-            try {
-                const proxiedUrl = __uv$config.prefix + __uv$config.encodeUrl(gameUrl);
-
-                fetch(proxiedUrl)
-                    .then(response => response.text())
-                    .then(proxiedHtml => {
-                        gameFrame.contentDocument.open();
-                        gameFrame.contentDocument.write(proxiedHtml);
-                        gameFrame.contentDocument.close();
-                    })
-                    .catch(error => {
-                        console.error("Error fetching proxied content:", error);
-                        gameFrame.src = "/404.html";
-                    });
+           try {
+                const proxiedUrl = __uv$config.prefix + __uv$config.encodeUrl(targetGameUrl);
+                gameFrame.src = proxiedUrl;
 
             } catch (error) {
-                console.error("Error loading URL:", error);
+                console.error("Error loading proxied URL:", error);
                 gameFrame.src = "/404.html";
             }
         }
