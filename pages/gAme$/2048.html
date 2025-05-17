@@ -26,7 +26,7 @@
             position: absolute;
             top: 0;
             left: 0;
-             transform: scale(0.8);
+            transform: scale(0.8);
             transform-origin: top left;
             width: 125%;
             height: 125%;
@@ -73,17 +73,42 @@
             const loadingScreen = document.getElementById('loading-screen');
             const gameIframe = document.getElementById('game-iframe');
 
-            // Simulate loading (replace with actual loading logic if needed)
-            gameIframe.onload = () => {
-                // Use a setTimeout to ensure the fade-out effect is visible
-                setTimeout(() => {
-                    loadingScreen.classList.add('fade-out');
-                    // Remove the loading screen from the DOM after the animation completes
+            // Function to get URL parameters
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                    results = regex.exec(location.search);
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+
+            // Get the game URL from the query parameter
+            const gameUrl = getUrlParameter('gameUrl');
+            const proxyUrl = '/bare/'; // Ultraviolet proxy URL.  Make sure this is correct!
+
+            if (gameUrl) {
+                // Construct the proxied URL
+                const proxiedUrl = proxyUrl + encodeURIComponent(gameUrl);
+                gameIframe.src = proxiedUrl; // Set the iframe source
+
+                gameIframe.onload = () => {
                     setTimeout(() => {
-                        loadingScreen.remove();
-                    }, 500); // 0.5s matches the CSS transition time
-                }, 500); // Short delay before starting fade-out
-            };
+                        loadingScreen.classList.add('fade-out');
+                        setTimeout(() => {
+                            loadingScreen.remove();
+                        }, 500);
+                    }, 500);
+                };
+            } else {
+                // Handle the case where no gameUrl is provided
+                gameIframe.src = "https://www.google.com"; // Or some default
+                loadingScreen.innerHTML = "<h1>No game URL provided.</h1>"; //inform
+                setTimeout(() => {
+                        loadingScreen.classList.add('fade-out');
+                        setTimeout(() => {
+                            loadingScreen.remove();
+                        }, 500);
+                    }, 2000);
+            }
         });
     </script>
 </head>
@@ -95,7 +120,6 @@
     <div id="game-container">
         <iframe
             id="game-iframe"
-            src="https://playfreegamesonlinewithoutdownloading.github.io/2048.html"
             frameborder="0"
             allowfullscreen>
         </iframe>
