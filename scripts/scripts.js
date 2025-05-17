@@ -173,4 +173,17 @@ document.addEventListener('DOMContentLoaded', () => {
         option.textContent = preset;
         faviconDropdown.appendChild(option);
     });
+
+    // ---  iframe load with proxy ---
+    const base64Url = window.location.hash.substring(1);  // Get URL from hash
+    if (base64Url) {
+        try {
+            const decodedUrl = atob(base64Url);  // Decode
+            const proxiedUrl = proxify(decodedUrl); // Proxy through Ultraviolet
+             gameFrame.src = proxiedUrl;
+        } catch (error) {
+            console.error("Error loading proxied content", error);
+             gameFrame.src = "/404.html"; // error page
+        }
+    }
 });
