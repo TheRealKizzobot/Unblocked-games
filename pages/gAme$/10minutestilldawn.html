@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Container</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="https://kit.fontawesome.com/30dbb05315.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/fontawsome.css">
+    <style>
+        #game-container {
+            width: 100%;
+            max-width: 14500px;
+            margin: 0 auto;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #game-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: scale(0.8);
+            transform-origin: top left;
+            width: 125%;
+            height: 125%;
+        }
+
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
+            z-index: 1000;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #loading-screen h1 {
+            color: #fff;
+            font-size: 24px;
+        }
+
+        #loading-spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #fff;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-right: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen" class="fade-out">
+        <div id="loading-spinner"></div>
+        <h1>Loading...</h1>
+    </div>
+<div class="game-holder">
+<iframe src="https://canvas.global.ssl.fastly.net/gsrc/1/index.html"></iframe>
+</div>
+
+</body>
+</html>
